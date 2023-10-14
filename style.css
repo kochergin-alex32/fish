@@ -2,7 +2,7 @@ container{
     border: 2px solid black;
     border: thick double black;
     width: 765px;
-    height: 460px;
+    height: 360px;
     display: flex;
     flex-direction: column;
     /* justify-content: center; */
