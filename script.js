@@ -1,6 +1,10 @@
+function Game(){
+var hits = document.querySelector('#hits')
+
+var startStop = document.querySelector('.startStop')
+var shat = document.querySelector('.shot')
 var canvas = document.querySelector('#canvas')
 var ctx = canvas.getContext("2d")
-console.log(ctx);
 var okUP = false
 var okDown = false
 var shot = false
@@ -9,6 +13,8 @@ var drawBackground = ()=>{
     ctx.fillStyle = "darkseagreen"
     ctx.fillRect(0,0,1000,400)
 }
+
+
 class Fish{
     constructor(x,y){
         // присваивает эти м полям x y  значения x и y
@@ -17,18 +23,13 @@ class Fish{
     }
     // метод для назначения цвета рыбы
     setSetings(){
-        var arrColors = ["red","green","yellow","lime","orangered","teal","agua","olive","blueviolet","brown","saddlerbrown","chocolate","purple","navy","darkslategray","dodgerblue"]
+        var arrColors = ["red","green","yellow","lime","orangered","teal","agua","olive","blueviolet","brown","saddlerbrown","chocolate","purple","navy","silver","dodgerblue"]
         // генерим случайный индекс на длинну массива
         var randIndex = Math.floor(Math.random()*arrColors.length);
         // назначаем цвет с рандомным индексом из массива
         this.color = arrColors[randIndex]
 
-        // //случайная скорость
-        // this.speed = Math.random()*4+3
-        // this.offsetY = Math.random()*300+50
-        // this.freq = Math.random()*0.01
-        // this.ampl = Math.random()*100+50
-
+       
         //случайная скорость
         this.speed = Math.random()*4+3
         this.offsetY = Math.random()*280+50
@@ -36,6 +37,7 @@ class Fish{
         this.ampl = Math.random()*90+40
     }
     //  метод для отрисовки рыбы
+   
     drawFish(){
         if (this.x < -10){
             this.setSetings()
@@ -109,7 +111,7 @@ class Bullet{
             shot = false
             var flyBullet = new Bullet(this.x,this.y)
             this.arrBullet.push(flyBullet)
-            console.log(this.arrBullet);
+            // console.log(this.arrBullet);
 
         }
         //проверка чтобыпуля стрелляла
@@ -120,13 +122,25 @@ class Bullet{
                 ctx.arc(element.x , element.y, 5, Math.PI/2, 3*Math.PI/2, true)
                 ctx.fill()
                 //проверка попадания пули в рыбу по формуле в тетради и если это расстоояние меньше суммы радиусов значит пуля попала
+                
                 if(Math.sqrt(Math.pow(element.x-fish.x,2)+Math.pow(element.y - fish.y,2))<15){
+                   
+                    if(fish.color != "black" ){
+                        hits.innerHTML++
+                    }
                     fish.color = "black"
+                    
                 }
 
                 if(Math.sqrt(Math.pow(element.x-fish2.x,2)+Math.pow(element.y - fish2.y,2))<15){
+                    if(fish2.color != "black" ){
+                        hits.innerHTML++
+                    }
                     fish2.color = "black"
+                    
+                   
                 }
+            
 
                 element.x += 5
                 // проверка если пуля вылетела за гранцы поля она удоляется из массива пуль
@@ -137,10 +151,10 @@ class Bullet{
         }
         //проверки для движения пули в верх и низ  соответственно 
         if(okUP===true&&this.y-5>0){
-            this.y -=5
+            this.y -=2
         }
         if(okDown===true&&this.y+5<400){
-            this.y +=5
+            this.y +=2
         }
        ctx.fillStyle = "black" 
         ctx.beginPath()
@@ -152,33 +166,92 @@ class Bullet{
 }
 var bullet = new Bullet(0,200)
 
+
+   
+
+
 var animate = ()=>{
     drawBackground()
+    
     fish.drawFish()
     fish2.drawFish()
     bullet.drawBullet()
-
+  
     requestAnimationFrame(animate)
 }
 animate()
 
+
 // задаем события клавишам цифры 38 39 40 коды кнопок клавиатуры вверх вправо вниз соответственно
 addEventListener("keydown",(e)=>{
-if(e.keyCode===38){
+    
+    if(e.keyCode===38){
+    
     okUP = true
 }
-if(e.keyCode===40){
+
+    if(e.keyCode===40){
     okDown = true
 }
-if(e.keyCode===39){
+if(e.keyCode===32){
     shot = true
+    
 }
 })
+
+
 addEventListener("keyup",(e)=>{
-    if(e.keyCode===38){
+   
+        if(e.keyCode===38){
         okUP = false
     }
-    if(e.keyCode===40){
+   
+        if(e.keyCode===40){
         okDown = false
     }
+    // отмена перезагрузки при отжатии пробела
+    if(e.keyCode===32){
+        e.preventDefault()
+        // console.log(8888);
+             
+    }
     })
+
+
+addEventListener('click',(e)=>{
+ 
+    if(e.target.className === "up"){
+        console.log(123);
+        okDown=false
+        okUP=true
+        setTimeout(()=>{okUP=false},600)
+       
+    }
+    if(e.target.className === "down"){
+        okUP=false
+        okDown =true
+        setTimeout(()=>{okDown=false},600)
+    }
+    
+})
+
+startStop.addEventListener('click',(e)=>{
+    startStop.classList.toggle('active')
+    
+    if(e.target.className=="startStop active"){
+        // startStop.innerHTML = 'stop'
+        console.log(789);
+       document.body.innerHTML = ""
+       StGm()
+   
+    }
+
+})
+
+shat.addEventListener('click',()=>{
+    shot = true
+})
+ 
+
+
+}
